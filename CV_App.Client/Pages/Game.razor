@@ -1,0 +1,47 @@
+﻿@page "/game"
+@implements IDisposable
+@inject ILogger<Game> Logger
+
+<h3>Movable Character (C# only)</h3>
+
+<div tabindex="0" class="game-area" @onkeydown="HandleKeyDown" @ref="gameAreaRef">
+    <div class="character" style="left:@characterXpx; top:@characterYpx;"></div>
+</div>
+
+@code {
+    private ElementReference gameAreaRef;
+
+    private int characterX = 100;
+    private int characterY = 100;
+
+    private string characterXpx => $"{characterX}px";
+    private string characterYpx => $"{characterY}px";
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+
+            await gameAreaRef.FocusAsync();
+        }
+    }
+
+    private void HandleKeyDown(KeyboardEventArgs e)
+    {
+        switch (e.Key)
+        {
+            case "ArrowUp": 
+                characterY -= 10; 
+                Logger.LogInformation("ArrowUp");
+
+                break;
+            case "ArrowDown": characterY += 10; break;
+            case "ArrowLeft": characterX -= 10; break;
+            case "ArrowRight": characterX += 10; break;
+        }
+    }
+
+    public void Dispose()
+    {
+    }
+}
